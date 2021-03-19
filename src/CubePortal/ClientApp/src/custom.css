@@ -12,3 +12,24 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+.blue { background-color: blue }
+.red { background-color: red }
+.green { background-color: green }
+.orange { background-color: orange }
+.yellow { background-color: yellow }
+.grey { background-color: grey }
+
+.cell {
+  width: 50px;
+  height: 50px;
+  border: 1px solid black;
+  display: inline-block;
+}
+.cell.grey {
+  visibility: hidden;
+}
+
+.split {
+  display: flex;
+}
