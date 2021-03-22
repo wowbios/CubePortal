@@ -40,3 +40,7 @@ code {
 .split {
   display: flex;
 }
+
+.map2d {
+  margin-bottom: 10px;
+}
