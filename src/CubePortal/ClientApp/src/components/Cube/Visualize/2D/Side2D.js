@@ -2,21 +2,11 @@
 import Cell2D from "./Cell2D";
 
 const Side2D = ({name, cells, isEmpty}) => {
-    const emptyCell = (i) => {
-        const key = i.toString()
-        return (
-            <Cell2D key value={key}/>
-        )
-    }
-    
     const renderedCell = []
-    if (isEmpty) {
-        for (let i=0;i<9;i++)
-            renderedCell.push(emptyCell(i))
-    }
-    else {
-        for (let i=0;i<9;i++)
-        {
+    for (let i = 0; i < 9; i++)
+        if (isEmpty) {
+            renderedCell.push((<Cell2D key={i}/>))
+        } else {
             const cell = cells[i]
             renderedCell.push(
                 (
@@ -24,7 +14,6 @@ const Side2D = ({name, cells, isEmpty}) => {
                 )
             )
         }
-    }
 
     return (
         <div className={"side"}>

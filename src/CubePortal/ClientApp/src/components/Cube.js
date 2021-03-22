@@ -16,7 +16,7 @@ export default class Cube extends Component
             left: Side.create("Left", Color.Blue),
             right: Side.create("Right", Color.Green),
             front: Side.create("Front", Color.Red),
-            back: Side.create("Back", Color.Orange),
+            back: Side.create("Back", Color.Orange)
         }
     }
     
@@ -30,22 +30,102 @@ export default class Cube extends Component
             back
         } = this.state
         
-        const rotationMap = {}
-        rotationMap[Move.R] = [right, true, [bot,back,top,front], [[2,2,2,2], [5,5,5,5], [8,8,8,8]]]
-        rotationMap[Move.R_] = [right, false, [bot,back,top,front].reverse(), [[2,2,2,2], [5,5,5,5], [8,8,8,8]]]
-        rotationMap[Move.L] = [left, true, [bot,back,top,front], [[0,0,0,0], [3,3,3,3], [6,6,6,6]]]
-        rotationMap[Move.L_] = [left, false, [bot,back,top,front].reverse(), [[0,0,0,0], [3,3,3,3], [6,6,6,6]]]
-        rotationMap[Move.F] = [front, true, [top, right, bot, left], [[6,0,8,8], [7,3,7,5], [8,6,6,2]]]
-        rotationMap[Move.F_] = [front, false, [top, right, bot, left].reverse(), [[6,0,8,8], [7,3,7,5], [8,6,6,2]]]
+        const makeMove = (side, clockwise, neighbors, indexes) => {
+            return {
+                side,
+                clockwise,
+                neighbors,
+                indexes
+            }
+        }
         
-        // 012
-        // 3 5
-        // 678
+        const inverseMove = ({clockwise, neighbors, indexes, ...rest}) => {
+            return {
+                clockwise: !clockwise,
+                neighbors: neighbors.slice().reverse(),
+                indexes: indexes.map(x => x.slice().reverse()),
+                ...rest
+            }
+        }
+        
+        const rotationMap = {}
+        
+        rotationMap[Move.R] = makeMove(
+            right,
+            true,
+            [bot, back, top, front],
+            [
+                [2, 6, 2, 2],
+                [5, 3, 5, 5],
+                [8, 0, 8, 8]
+            ])
+        rotationMap[Move.R_] = inverseMove(rotationMap[Move.R])
+        console.log(rotationMap)
+
+        rotationMap[Move.L] = makeMove(
+            left,
+            true,
+            [front, top, back, bot],
+            [
+                [0, 0, 8, 0],
+                [3, 3, 5, 3],
+                [6, 6, 2, 6]
+            ]
+        )
+        rotationMap[Move.L_] = inverseMove(rotationMap[Move.L])
+
+        rotationMap[Move.F] = makeMove(
+            front,
+            true,
+            [left, bot, right, top],
+            [
+                [2, 0, 6, 8],
+                [5, 1, 3, 7],
+                [8, 2, 0, 6]
+            ]
+        )
+        rotationMap[Move.F_] = inverseMove(rotationMap[Move.F])
+
+        rotationMap[Move.B] = makeMove(
+            back,
+            true,
+            [top, right, bot, left],
+            [
+                [2, 8, 6, 0],
+                [1, 5, 7, 3],
+                [0, 2, 8, 6]
+            ]
+        )
+        rotationMap[Move.B_] = inverseMove(rotationMap[Move.B])
+
+        rotationMap[Move.U] = makeMove(
+            top,
+            true,
+            [right, back, left, front],
+            [
+                [0, 0, 0, 0],
+                [1, 1, 1, 1],
+                [2, 2, 2, 2]
+            ]
+        )
+        rotationMap[Move.U_] = inverseMove(rotationMap[Move.U])
+
+        rotationMap[Move.D] = makeMove(
+            bot,
+            true,
+            [front, left, back, right],
+            [
+                [6, 6, 6, 6],
+                [7, 7, 7, 7],
+                [8, 8, 8, 8]
+            ]
+        )
+        rotationMap[Move.D_] = inverseMove(rotationMap[Move.D])
         
         if (!rotationMap.hasOwnProperty(move))
             throw new Error("Unknown move: " + move)
         
-        this.rotateCube(...rotationMap[move])
+        Cube.rotateCube(rotationMap[move])
 
         this.setState({
             top,
@@ -57,12 +137,6 @@ export default class Cube extends Component
         })
     }
 
-    rotateCube(side, clockwise, neighbors, neighborIndexes) {
-        Cube.rotateSide(side, clockwise)
-        neighborIndexes.forEach(
-            neighborIndex => Cube.swap(neighbors, neighborIndex))
-    }
-        
     render() {
         const {
             top,
@@ -79,22 +153,30 @@ export default class Cube extends Component
             [null, bot, null, null]
         ]
         
-        const renderRow = (row) => (
-                <div className={"split"}>
-                    {row.map(r => 
-                    r == null
-                    ? <Side2D isEmpty />
-                    : <Side2D {...r} />)}
+        const renderRow = (row, index) => (
+                <div className={"split"} key={"Row" + index.toString()}>
+                    {
+                        row.map((side, i) => {
+                            const key = "Side" + i.toString()
+                            return side == null
+                                ? <Side2D isEmpty key={key} />
+                                : <Side2D {...side} key={key} />
+                        })                            
+                    }
                 </div>
             )
         
         return (
             <div>
-                {
-                    rows.map(renderRow)
-                }
+                { rows.map(renderRow) }
             </div>
         )
+    }
+
+    static rotateCube({side, clockwise, neighbors, indexes}) {
+        Cube.rotateSide(side, clockwise)
+        indexes.forEach(
+            neighborIndex => Cube.swap(neighbors, neighborIndex))
     }
 
     static swap = (sides, indexes) => {
@@ -125,13 +207,12 @@ export default class Cube extends Component
     static oneSideSwap = (side, i1, i2) => Cube.swap([side, side], [i1, i2])
     
     static rotateSide = (side, clockwise) => {
-        console.log("rotating side ", side)
         const sides = ArrayRepeat(side, 4)
-        const rebra = [0,2,8,6]
-        const corners = [1,5,7,3]
+        const edges = [3, 7, 5, 1]
+        const corners = [6, 8, 2, 0]
         Cube.swap(
             sides,
-            clockwise ? rebra : rebra.reverse()
+            clockwise ? edges : edges.reverse()
         )
         Cube.swap(
             sides,
