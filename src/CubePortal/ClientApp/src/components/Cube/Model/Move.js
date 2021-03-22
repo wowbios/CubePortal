@@ -1,4 +1,4 @@
-﻿import { Enum } from './Utils'
+﻿import { Enum } from '../../Utils'
 
 export default Enum({
     "R": 0,

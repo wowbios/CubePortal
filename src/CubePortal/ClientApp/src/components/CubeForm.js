@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react'
 // import * as THREE from 'three'
 import Cube from './Cube'
-import Move from './Move'
+import Move from './Cube/Model/Move'
 
 export default class CubeForm extends Component {
     constructor(props) {

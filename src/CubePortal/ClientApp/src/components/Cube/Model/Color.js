@@ -1,4 +1,4 @@
-﻿import { Enum } from './Utils'
+﻿import { Enum } from '../../Utils'
 
 export default Enum({
     "Red": 0,
@@ -16,8 +16,7 @@ export default Enum({
             case 3: return "blue"
             case 4: return "white"
             case 5: return "yellow"
-            case 6: return "grey"
-            default: throw new Error("unknw color" + value)
+            default:  return "grey"
         }
     }
 })

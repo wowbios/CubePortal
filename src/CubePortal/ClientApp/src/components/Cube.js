@@ -1,40 +1,9 @@
 ﻿import React, {Component} from 'react';
-import Color from './Color'
-import Move from './Move'
-import {Clock} from "three";
-
-const ArrayRepeat = (value, count) => {
-    const array = []
-    for (let i = 0; i < count; i++)
-        array.push(value)
-    return array
-}
-
-class Cell {
-    color
-    
-    constructor(color) {
-        this.color = color
-    }
-}
-
-class Side {
-    cells
-    name
-    
-    constructor(name, cells) {
-        this.cells = cells
-        this.name = name
-    }
-    
-    static create(name, color){
-        const cells = []
-        for (let i = 0; i < 9; i++){
-            cells.push(new Cell(color))
-        }
-        return new Side(name, cells)
-    }
-}
+import Color from './Cube/Model/Color'
+import Move from './Cube/Model/Move'
+import Side2D from "./Cube/Visualize/2D/Side2D";
+import Side from "./Cube/Model/Side";
+import {ArrayRepeat} from "./Utils";
 
 export default class Cube extends Component
 {    
@@ -93,23 +62,7 @@ export default class Cube extends Component
         neighborIndexes.forEach(
             neighborIndex => Cube.swap(neighbors, neighborIndex))
     }
-
-    renderCell(key, { color }) {
-        return (
-            <div className={"cell " + Color.GetCssName(color)} key={key}>{key}</div>
-        )
-    }
-    
-    renderCells(side, ind) {
-        return ind.map(i => this.renderCell(side.name + "-" + i, side.cells[i]))
-    }
-    
-    renderEmpty(num) {
-        const keyPart = "Empty" + num
-        return ArrayRepeat(Color.Empty, 3)
-            .map((c, i) => this.renderCell(keyPart + i, new Cell(c)))
-    }
-    
+        
     render() {
         const {
             top,
@@ -119,66 +72,27 @@ export default class Cube extends Component
             front,
             back
         } = this.state
-                
+
+        const rows = [
+            [null, top, null, null],
+            [left, front, right, back],
+            [null, bot, null, null]
+        ]
+        
+        const renderRow = (row) => (
+                <div className={"split"}>
+                    {row.map(r => 
+                    r == null
+                    ? <Side2D isEmpty />
+                    : <Side2D {...r} />)}
+                </div>
+            )
+        
         return (
             <div>
-                <div className={"split"}>
-                {this.renderEmpty(0)}
-                {this.renderCells(top, [0,1,2])}
-                {this.renderEmpty(1)}
-                {this.renderEmpty(2)}
-                </div>
-                <div className={"split"}>
-                {this.renderEmpty(3)}
-                {this.renderCells(top, [3,4,5])}
-                {this.renderEmpty(4)}
-                {this.renderEmpty(5)}
-                </div>
-                <div className={"split"}>
-                {this.renderEmpty(6)}
-                {this.renderCells(top, [6,7,8])}
-                {this.renderEmpty(7)}
-                {this.renderEmpty(8)}
-                </div>
-
-                <div className={"split"}>
-                {this.renderCells(left, [0,1,2])}
-                {this.renderCells(front, [0,1,2])}
-                {this.renderCells(right, [0,1,2])}
-                {this.renderCells(back, [0,1,2])}
-                </div>
-                <div className={"split"}>
-                {this.renderCells(left, [3,4,5])}
-                {this.renderCells(front, [3,4,5])}
-                {this.renderCells(right, [3,4,5])}
-                {this.renderCells(back, [3,4,5])}
-                </div>
-                <div className={"split"}>
-                {this.renderCells(left, [6,7,8])}
-                {this.renderCells(front, [6,7,8])}
-                {this.renderCells(right, [6,7,8])}
-                {this.renderCells(back, [6,7,8])}
-                </div>
-
-                <div className={"split"}>
-                    {this.renderEmpty(15)}
-                    {this.renderCells(bot,[6,7,8])}
-                    {this.renderEmpty(16)}
-                    {this.renderEmpty(17)}
-                </div>
-                <div className={"split"}>
-                    {this.renderEmpty(12)}
-                    {this.renderCells(bot, [3,4,5])}
-                    {this.renderEmpty(13)}
-                    {this.renderEmpty(14)}
-                </div>
-                <div className={"split"}>
-                {this.renderEmpty(9)}
-                {this.renderCells(bot, [0,1,2])}
-                {this.renderEmpty(10)}
-                {this.renderEmpty(11)}
-                </div>
-                
+                {
+                    rows.map(renderRow)
+                }
             </div>
         )
     }
