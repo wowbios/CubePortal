@@ -16,8 +16,21 @@ namespace CubePortal
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            #if HEROKU
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+                .ConfigureWebHost(s =>
+                {
+                    var port = Environment.GetEnvironmentVariable("PORT");
+                    s.UseUrls("http://*:" + port);
+                });
+            #else 
+                return Host.CreateDefaultBuilder(args)
+                    .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+            #endif
+        }
+            
     }
 }
