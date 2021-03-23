@@ -114,8 +114,7 @@ export default class Rotator {
 
     static rotateCube({side, clockwise, neighbors, indexes}) {
         Rotator.rotateSide(side, clockwise)
-        indexes.forEach(
-            neighborIndex => Rotator.swap(neighbors, neighborIndex))
+        indexes.forEach(neighborIndex => Rotator.swap(neighbors, neighborIndex))
     }
 
     static swap = (sides, indexes) => {
