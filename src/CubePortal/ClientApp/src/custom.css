@@ -44,3 +44,8 @@ code {
 .map2d {
   margin-bottom: 10px;
 }
+
+.map3d {
+  width: 500px;
+  height: 500px;
+}

@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react'
-import Cube from './Cube'
+import Cube from './Cube/Cube'
 import Move from './Cube/Model/Move'
 
 export default class CubeForm extends Component {

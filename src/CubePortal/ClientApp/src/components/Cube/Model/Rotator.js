@@ -23,7 +23,7 @@ class Movement {
 }
 
 export default class Rotator {
-    constructor(sides) {
+    constructor(cube) {
         const {
             top,
             left,
@@ -31,7 +31,7 @@ export default class Rotator {
             right,
             back,
             bot
-        } = sides
+        } = cube
         
         this[Move.R] = new Movement(
             right,

@@ -1,5 +1,6 @@
 ﻿import Side from "./Side";
 import Color from "./Color";
+import Rotator from "./Rotator";
 
 export default class CubeState {
     top
@@ -16,5 +17,8 @@ export default class CubeState {
         this.right = Side.create("Right", Color.Green)
         this.front = Side.create("Front", Color.Red)
         this.back = Side.create("Back", Color.Orange)
+        this.rotator = new Rotator(this)
     }
+    
+    rotate = (move) => this.rotator.rotate(move)
 }
