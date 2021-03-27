@@ -29,7 +29,7 @@ export default class Cube extends Component {
         return (
             <>
                 <CubeVisualizer3D cube={cube}/>
-                <CubeVisualizer2D cube={cube}/>
+                {/*<CubeVisualizer2D cube={cube}/>*/}
             </>
         )
     }

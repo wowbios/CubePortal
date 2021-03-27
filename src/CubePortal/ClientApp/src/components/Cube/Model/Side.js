@@ -2,18 +2,18 @@
 
 export default class Side {
     cells
-    name
+    type
 
-    constructor(name, cells) {
+    constructor(type, cells) {
         this.cells = cells
-        this.name = name
+        this.type = type
     }
 
-    static create(name, color){
+    static create(type, color){
         const cells = []
         for (let i = 0; i < 9; i++){
             cells.push(new Cell(color))
         }
-        return new Side(name, cells)
+        return new Side(type, cells)
     }
 }

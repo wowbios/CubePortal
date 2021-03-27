@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import Cell2D from "./Cell2D";
 
-const Side2D = ({name, cells, isEmpty}) => {
+const Side2D = ({type, cells, isEmpty}) => {
     const renderedCell = []
     for (let i = 0; i < 9; i++)
         if (isEmpty) {
@@ -10,7 +10,7 @@ const Side2D = ({name, cells, isEmpty}) => {
             const cell = cells[i]
             renderedCell.push(
                 (
-                    <Cell2D key={name + " " + i} color={cell.color} value={i}/>
+                    <Cell2D key={type + " " + i} color={cell.color} value={i}/>
                 )
             )
         }
