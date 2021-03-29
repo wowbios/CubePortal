@@ -15,7 +15,7 @@ export default class CubeVisualizer3D extends Component {
                     camera={{position: [-5, 5, 5], fov: 60}}
                     shadowMap
                 className={"map3d"}>
-                    <color attach='background' args={["black"]} />
+                    <color attach='background' args={["grey"]} />
                     <Scene cube={cube}/>
                 </Canvas>
         )
